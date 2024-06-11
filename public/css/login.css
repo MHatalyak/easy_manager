@@ -1,0 +1,214 @@
+.login-section {
+  padding-top: 0px;
+}
+
+.login-container {
+  position: absolute;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  max-width: inherit;
+  min-height: max-content;
+}
+.login-container:hover .top:before,
+.container:active .top:before,
+.container:hover .bottom:before,
+.container:active .bottom:before,
+.container:hover .top:after,
+.container:active .top:after,
+.container:hover .bottom:after,
+.container:active .bottom:after {
+  margin-left: 200px;
+  transform-origin: -200px 50%;
+  transition-delay: 0s;
+  box-sizing: border-box;
+}
+.login-container:hover .center,
+.container:active .center {
+  opacity: 1;
+  transition-delay: 1s;
+  box-sizing: border-box;
+}
+.top:before,
+.bottom:before,
+.top:after,
+.bottom:after {
+  content: '';
+  display: block;
+  position: absolute;
+  width: 200vmax;
+  height: 200vmax;
+  top: 50%;
+  left: 50%;
+  margin-top: -100vmax;
+  transform-origin: 0 50%;
+  transition: all 1s cubic-bezier(0.445, 0.05, 0, 1);
+  z-index: 10;
+  opacity: 0.65;
+  transition-delay: 1s;
+  box-sizing: border-box;
+}
+.top:before {
+  transform: rotate(45deg);
+  background: #e46569;
+  box-sizing: border-box;
+}
+.top:after {
+  transform: rotate(135deg);
+  background: #ecaf81;
+  box-sizing: border-box;
+}
+.bottom:before {
+  transform: rotate(-45deg);
+  background: #60b8d4;
+  box-sizing: border-box;
+}
+.bottom:after {
+  transform: rotate(-135deg);
+  background: #3745b5;
+  box-sizing: border-box;
+}
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: var(--profile-btn);
+}
+
+.box {
+  position: relative;
+  width: 380px;
+  height: 420px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+.form {
+  position: relative;
+  inset: 2px;
+  border-radius: 10px;
+  z-index: 10;
+  padding: 40px 10px;
+  display: flex;
+  flex-direction: column;
+}
+.login-header {
+  color: var(--accent-color);
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 0.1em;
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+.center {
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  top: 45%;
+  left: 50%;
+  margin-left: -200px;
+  margin-top: -200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  opacity: 0;
+  transition: all 1s cubic-bezier(0.445, 0.05, 0, 1);
+  transition-delay: 1s;
+  color: var(--accent-color);
+}
+
+span.icon-link.icon-header.link.header-paddings {
+  margin-right: 0;
+  margin-bottom: 5px;
+  font-size: 16px;
+}
+
+.login-p {
+  margin-top: 10px;
+}
+
+.input-box input {
+  position: relative;
+  width: 250px;
+  padding: 10px 10px 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  background: transparent;
+  border: none;
+  outline: none;
+  border-radius: 12px;
+  font-size: 1em;
+  letter-spacing: 0.05em;
+  padding-left: 15px;
+}
+
+.login_input {
+  position: absolute;
+  left: 0;
+  padding: 20px 10px 10px;
+  color: #23242a;
+  pointer-events: none;
+  transition: 0.5s;
+  z-index: 10;
+}
+
+.input-box input:valid ~ .login_input,
+.input-box input:focus ~ .login_input {
+  color: var(--accent-color);
+  transform: translateY(-25px);
+  font-size: 0.75em;
+}
+
+.input-box i {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--accent-color);
+  border-radius: 4px;
+  transition: 0.5s;
+  pointer-events: none;
+  z-index: 9;
+}
+
+.input-box input:valid i,
+.input-box input:focus i {
+  height: 44px;
+}
+
+.hero-btn {
+  display: block;
+  font-family: var(--primary-font);
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: 0.04em;
+  padding-top: 6px;
+  padding-bottom: 6px;
+  padding-left: 20px;
+  margin-top: 10px;
+  padding-right: 20px;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--profile-btn);
+  border-color: transparent;
+  background: var(--btn-bg-color);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.15);
+  border-radius: 4px;
+
+  transition: background-color var(--trans-descrp);
+}
+
+.hero-btn:hover,
+.hero-btn:focus {
+  background-color: var(--accent-color);
+  cursor: pointer;
+}
+
+.header-color {
+  color: var(--header-color);
+}

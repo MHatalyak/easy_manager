@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="<%= i18n.getLocale() %>">
+  <head>
+    <%- include('../parts/head'); %>
+    <script src="https://balkan.app/js/OrgChart.js"></script>
+  </head>
+  <body>
+    <header class="header"><%- include('../parts/header'); %></header>
+    <div id="tree"></div>
+    <script>
+      var userRole = '<%=req.cookies.role%>';
+      var addText = "<%= __('addText') %>";
+      var removeText = "<%= __('removeText') %>";
+      var nodeMenu =
+        userRole === 'admin'
+          ? {
+              add: { text: addText },
+              remove: { text: removeText },
+            }
+          : null;
+      var detailsIcon =
+        '<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 16 16" id="more"><path fill="#ffffff" d="M4,6.75 C4.69036,6.75 5.25,7.30964 5.25,8 C5.25,8.69036 4.69036,9.25 4,9.25 C3.30964,9.25 2.75,8.69036 2.75,8 C2.75,7.30964 3.30964,6.75 4,6.75 Z M8,6.75 C8.69036,6.75 9.25,7.30964 9.25,8 C9.25,8.69036 8.69036,9.25 8,9.25 C7.30964,9.25 6.75,8.69036 6.75,8 C6.75,7.30964 7.30964,6.75 8,6.75 Z M12,6.75 C12.6904,6.75 13.25,7.30964 13.25,8 C13.25,8.69036 12.6904,9.25 12,9.25 C11.3096,9.25 10.75,8.69036 10.75,8 C10.75,7.30964 11.3096,6.75 12,6.75 Z"/></svg>';
+      window.onload = function () {
+        OrgChart.SEARCH_PLACEHOLDER = "<%= __('search') %>";
+        var chart = new OrgChart(document.getElementById('tree'), {
+          template: 'polina',
+          layout: OrgChart.mixed,
+          menu: {
+            pdf: {
+              text: "<%= __('export') %> PDF",
+            },
+            png: {
+              text: "<%= __('export') %> PNG",
+            },
+            svg: {
+              text: "<%= __('export') %> SVG",
+            },
+            csv: {
+              text: "<%= __('export') %> CSV",
+            },
+          },
+
+          nodeMenu: nodeMenu,
+          enableSearch: true,
+          nodeMouseClick: OrgChart.action.details,
+          editForm: {
+            readOnly: userRole !== 'admin',
+            buttons: {
+              details: {
+                icon: detailsIcon,
+                text: "<%= __('details') %>",
+                onClick: function (sender, args) {
+                  var data = chart.get(args.node.id);
+                  window.location.href = '/profile/' + data.name;
+                },
+              },
+            },
+            elements: [
+              {
+                type: 'textbox',
+                label: "<%= __('fullName') %>",
+                binding: 'name',
+              },
+              {
+                type: 'textbox',
+                label: "<%= __('jobTitle') %>",
+                binding: 'title',
+              },
+              { type: 'textbox', label: 'Email', binding: 'email' },
+              { type: 'textbox', label: 'Photo Url', binding: 'img' },
+            ],
+          },
+
+          nodeBinding: {
+            field_0: 'name',
+            field_1: 'title',
+            field_2: 'email',
+            img_0: 'img',
+          },
+          toolbar: { fit: true },
+
+          nodes: JSON.parse('<%- JSON.stringify(nodes) %>'),
+        });
+        chart.onUpdateNode(function (args) {
+          var updatedData = {
+            user_id: args.newData.id,
+            name: args.newData.name,
+            title: args.newData.title,
+            email: args.newData.email,
+            img: args.newData.img,
+          };
+
+          fetch('/update-user', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(updatedData),
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                console.log('User updated successfully');
+              } else {
+                console.error('Error updating user:', data.error);
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        });
+
+        chart.onRemoveNode(function (args) {
+          var userId = args.id;
+
+          fetch('/delete-user', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user_id: userId }),
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                console.log('User deleted successfully');
+              } else {
+                console.error('Error deleting user:', data.error);
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        });
+
+        chart.onAddNode(function (args) {
+          var userPid = args.data.pid;
+
+          fetch('/add-user', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ user_pid: userPid }),
+          })
+            .then(response => response.json())
+            .then(data => {
+              if (data.success) {
+                console.log('User added successfully');
+              } else {
+                console.error('Error adding user:', data.error);
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        });
+        chart.editUI.on('button-click', function (sender, args) {
+          if (args.name == 'details') {
+            var data = chart.get(args.nodeId);
+            window.location.href = '/profile/' + data.name;
+          }
+        });
+      };
+    </script>
+  </body>
+</html>

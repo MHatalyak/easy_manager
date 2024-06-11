@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="<%= i18n.getLocale() %>">
+  <head>
+    <%- include('../parts/head'); %>
+  </head>
+  <body>
+    <header class="header"><%- include('../parts/header'); %></header>
+    <main>
+      <section class="sections-padding wrapper">
+        <div class="container project_container">
+          <main class="row title">
+            <ul>
+              <li class="project_table_title"><%= __('projectTitle') %></li>
+              <li class="project_table_title"><%= __('projectManager') %></li>
+              <li class="project_table_title"><%= __('client') %></li>
+              <li class="project_table_title"><%= __('direction') %></li>
+              <li class="project_table_title">Status</li>
+            </ul>
+          </main>
+          <% projects.forEach(project => { %>
+          <article class="row nfl">
+            <ul class="main-content">
+              <li>
+                <a class="project_name" href="#"><%= project.project_name %></a>
+              </li>
+              <li>
+                <a
+                  class="link text-hover"
+                  href="/profile/<%= project.project_manager %>"
+                >
+                  <%= project.project_manager %>
+                </a>
+              </li>
+              <li class="project-text"><%= project.company %></li>
+              <li class="project-text"><%= project.direction %></li>
+              <li class="project-text"><%= project.status %></li>
+            </ul>
+            <ul class="more-content">
+              <li class="more_content_desc">
+                <%= project.description %>
+                <ul class="team_members_project">
+                  <li class="team_members_project_item" style="padding-left: 0">
+                    Team:
+                  </li>
+                  <% project.team_members.forEach(function(teamMember) { %>
+                  <li>
+                    <a
+                      class="details-text project_name"
+                      href="/profile/<%= teamMember %>"
+                    >
+                      <%= teamMember %>
+                    </a>
+                  </li>
+                  <% }); %>
+                </ul>
+              </li>
+            </ul>
+          </article>
+          <% }); %> <% if (req.cookies.role && req.cookies.role == "admin") { %>
+          <span class="add-learning add-project" id="addProjectLink"
+            >&times;</span
+          ><% } %>
+        </div>
+      </section>
+    </main>
+    <div id="addProjectModal" class="modal">
+      <div class="modal-content project-modal-content">
+        <span class="close close-projects">&times;</span>
+        <form action="/add-projects" method="POST">
+          <div class="modal-data project-modal-data">
+            <ul class="learning-list project-list list">
+              <li class="learning-item project-item">
+                <div class="project-name">
+                  <label for="project_name"><%= __('projectTitle') %>:</label>
+                  <input
+                    type="text"
+                    id="project-name"
+                    name="project_name"
+                    class="learning-input project-input"
+                    required
+                  />
+                </div>
+                <div class="project-manager">
+                  <label for="project_manager"
+                    ><%= __('projectManager') %>:</label
+                  >
+                  <input
+                    type="text"
+                    id="project-manager"
+                    name="project_manager"
+                    class="learning-input project-input"
+                    required
+                  />
+                </div>
+              </li>
+              <li class="learning-item project-item">
+                <div class="client">
+                  <label for="company"><%= __('client') %>:</label>
+                  <input
+                    type="text"
+                    id="client"
+                    name="company"
+                    class="learning-input project-input"
+                    required
+                  />
+                </div>
+                <div class="direction">
+                  <label for="direction"><%= __('direction') %>:</label>
+                  <input
+                    type="text"
+                    id="direction"
+                    name="direction"
+                    class="learning-input project-input"
+                    required
+                  />
+                </div>
+              </li>
+              <li class="learning-item project-item">
+                <label for="status"><%= __('status') %>:</label>
+                <select name="status" id="status" class="status">
+                  <option value="Done">Done</option>
+                  <option value="In-progress">In progress</option>
+                  <option value="Plan">Plan</option>
+                </select>
+              </li>
+              <li class="learning-item project-item">
+                <div class="description">
+                  <label for="description"><%= __('description') %></label>
+                  <textarea
+                    type="text"
+                    id="description"
+                    name="description"
+                    class="feedback description-text"
+                  ></textarea>
+                </div>
+              </li>
+              <li class="learning-item project-item">
+                <div class="team">
+                  <label for="team_members"><%= __('team') %></label>
+                  <input
+                    type="text"
+                    id="team"
+                    name="team_members"
+                    class="learning-input"
+                    required
+                  />
+                </div>
+              </li>
+            </ul>
+
+            <button type="submit" id="sendProjectBtn" class="settings-btn">
+              <%= __('send_button') %>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

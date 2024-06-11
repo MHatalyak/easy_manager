@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="<%= i18n.getLocale() %>">
+  <head>
+    <%- include('../parts/head'); %>
+  </head>
+  <body>
+    <header class="header"><%- include('../parts/header'); %></header>
+    <div class="menu">
+      <div class="menu-header">
+        <h2 class="menu-header-title"><%= __('theme') %></h2>
+        <div class="theme-switcher">
+          <input type="radio" id="light-theme" name="themes" checked />
+          <label for="light-theme">
+            <span> <ion-icon name="sunny"></ion-icon> <%= __('light') %> </span>
+          </label>
+          <input type="radio" id="dark-theme" name="themes" />
+          <label for="dark-theme">
+            <span> <ion-icon name="moon"></ion-icon> <%= __('dark') %> </span>
+          </label>
+          <input type="range" min="0" max="100" value="50" id="themeSlider" />
+          <span class="slider"></span>
+        </div>
+      </div>
+      <div class="menu-header">
+        <h2 class="menu-header-title"><%= __('lang') %></h2>
+        <div class="theme-switcher">
+          <input type="radio" id="lang-en" name="languages" <%= i18n.getLocale()
+          === 'en' ? 'checked' : '' %>
+          onclick="window.location.href='/change-lang/en';"/>
+          <label for="lang-en">
+            <span>English</span>
+          </label>
+          <input type="radio" id="lang-uk" name="languages" <%= i18n.getLocale()
+          === 'uk' ? 'checked' : '' %>
+          onclick="window.location.href='/change-lang/uk';"/>
+          <label for="lang-uk">
+            <span>Українська</span>
+          </label>
+          <input type="range" min="0" max="100" value="50" id="langSlider" />
+          <span class="slider"></span>
+        </div>
+      </div>
+      <div class="menu-body">
+        <h2 class="menu-header-title"><%= __('personal_information') %></h2>
+        <div class="menu-input">
+          <form action="/settings-name" method="post">
+            <div class="input-box input">
+              <input
+                type="text"
+                name="name"
+                placeholder="<%= __('full_name') %>"
+              />
+              <button type="submit" class="settings-btn">
+                <%= __('update_full_name') %>
+              </button>
+            </div>
+          </form>
+          <form action="/settings-phone" method="post">
+            <div class="input-box input">
+              <input
+                type="tel"
+                name="phone"
+                placeholder="<%= __('phone_number') %>"
+              />
+              <button type="submit" class="settings-btn">
+                <%= __('update_phone_number') %>
+              </button>
+            </div>
+          </form>
+        </div>
+        <div class="menu-body menu-links">
+          <a id="feedbackLink">
+            <ion-icon name="chatbox-ellipses-outline"></ion-icon> <%=
+            __('give_feedback') %>
+          </a>
+          <a id="aboutLink">
+            <ion-icon name="information-circle-outline"></ion-icon> <%=
+            __('about') %>
+          </a>
+          <a id="supportLink">
+            <ion-icon name="mail-outline"></ion-icon> <%= __('support') %>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div id="feedbackModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <form action="/feedback" method="post">
+          <div class="modal-data">
+            <h2 class="menu-header-title modal-title">
+              <%= __('give_feedback') %>
+            </h2>
+            <label class="feedback-label"><%= __('enter_feedback') %></label>
+            <textarea type="text" name="feedback" class="feedback"></textarea>
+            <button type="submit" id="sendFeedbackBtn" class="settings-btn">
+              <%= __('send') %>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div id="aboutModal" class="modal">
+      <div class="modal-content about-modal">
+        <span class="close">&times;</span>
+        <div class="modal-data">
+          <h2 class="menu-header-title modal-title"><%= __('about') %></h2>
+          <p class="about-text"><%= __('welcome_message') %></p>
+          <p class="about-text"><%= __('security_message') %></p>
+        </div>
+      </div>
+    </div>
+
+    <div id="supportModal" class="modal">
+      <div class="modal-content support-modal">
+        <span class="close support-close">&times;</span>
+        <div class="modal-data">
+          <h2 class="menu-header-title modal-title"><%= __('support') %></h2>
+          <p class="about-text support-text"><%= __('support_message') %></p>
+          <div class="details-modal">
+            <p>
+              <b class="modal-title"><%= __('phone') %>:</b>
+              <a class="link text-hover" href="tel:123-456-78-90"
+                >123-456-78-90</a
+              >
+            </p>
+            <p>
+              <b class="modal-title"><%= __('email') %>:</b>
+              <a class="link text-hover" href="mailto:support@gmail.com"
+                >support@gmail.com</a
+              >
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </body>
+</html>

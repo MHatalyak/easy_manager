@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="<%= i18n.getLocale() %>">
+  <head>
+    <%- include('../parts/head'); %>
+  </head>
+  <body>
+    <header class="header"><%- include('../parts/header'); %></header>
+    <main>
+      <section class="section_projects sections-padding">
+        <div class="container learning_container">
+          <h2 class="visually-hidden">Learnings list</h2>
+          <ul class="responsive-table">
+            <li class="table-header">
+              <div class="col col-1"></div>
+              <div class="col col-2"><%= __('col2') %></div>
+              <div class="col col-3"><%= __('col3') %></div>
+              <div class="col col-4"><%= __('col4') %></div>
+            </li>
+            <% learnings.forEach((learning, index) => { %>
+            <li class="table-row">
+              <% if (req.cookies.role && req.cookies.role == "admin") { %>
+              <span
+                class="delete-learning"
+                data-learning-id="<%= learning.id %>"
+                >&times;</span
+              ><% } %>
+              <div class="col col-1"><%= index + 1 %></div>
+              <div class="col col-2">
+                <a class="link text-hover" href="<%= learning.source %>">
+                  <%= learning.learning_name %></a
+                >
+              </div>
+              <div class="col col-3">
+                <a class="link text-hover" href="<%= learning.source %>"
+                  ><%= learning.source %></a
+                >
+              </div>
+              <div class="col col-4"><%= learning.access_for %></div>
+            </li>
+            <% }); %>
+          </ul>
+        </div>
+        <% if (req.cookies.role && req.cookies.role == "admin") { %>
+        <span class="add-learning" id="addLink">&times;</span><% } %>
+      </section>
+    </main>
+    <div id="addModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <form action="/add-learning" method="post">
+          <div class="modal-data">
+            <ul class="learning-list list">
+              <li class="learning-item">
+                <label for="learningName"><%= __('learning_name') %></label>
+                <input
+                  type="text"
+                  id="learningName"
+                  name="learning_name"
+                  class="learning-input"
+                  required
+                />
+              </li>
+              <li class="learning-item">
+                <label for="source"><%= __('source') %></label>
+                <input
+                  type="text"
+                  id="source"
+                  name="source"
+                  class="learning-input"
+                  required
+                />
+              </li>
+              <li class="learning-item">
+                <label for="accessFor"><%= __('access_for') %></label>
+                <input
+                  type="text"
+                  id="accessFor"
+                  name="access_for"
+                  class="learning-input"
+                  required
+                />
+              </li>
+            </ul>
+
+            <button type="submit" id="sendLearningBtn" class="settings-btn">
+              <%= __('send_button') %>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script>
+      document.querySelectorAll('.delete-learning').forEach(function (element) {
+        element.addEventListener('click', function () {
+          var learningId = this.dataset.learningId; // отримати ідентифікатор видаляючого learning
+          fetch('/delete-learning', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ learningId: learningId }),
+          })
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not ok');
+              }
+              return response.json();
+            })
+            .then(data => {
+              this.parentNode.remove();
+              console.log('Learning deleted successfully');
+            })
+            .catch(error => {
+              console.error(
+                'There was a problem with your fetch operation:',
+                error
+              );
+            });
+        });
+      });
+    </script>
+  </body>
+</html>

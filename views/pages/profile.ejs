@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="<%= i18n.getLocale() %>">
+  <head>
+    <%- include('../parts/head'); %>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js"></script>
+  </head>
+  <body>
+    <header class="header"><%- include('../parts/header'); %></header>
+    <main>
+      <section class="profile-section sections-padding">
+        <div class="container profile-container">
+          <div class="left">
+            <img
+              class="profile-img"
+              src="<%= employee.img %>"
+              alt="user"
+              width="350"
+              height="150"
+            />
+            <h4><%= employee.name %></h4>
+            <p><%= employee.title %></p>
+          </div>
+
+          <div class="right">
+            <div class="projects">
+              <h3><%= __('contactInformation') %></h3>
+              <div class="projects_data">
+                <div class="data">
+                  <h4><%= __('profileEmail') %></h4>
+                  <p class="edit-project">
+                    <a
+                      name="email"
+                      class="details-text link text-hover"
+                      href="mailto:<%= employee.email %>"
+                      ><%= employee.email %></a
+                    >
+                    <% if (req.cookies.role && req.cookies.role == "admin") { %>
+                    <span
+                      id="editEmail"
+                      class="edit-icon"
+                      onclick="editField('email')"
+                    >
+                      <i class="fas fa-pencil-alt"></i> </span
+                    ><% } %>
+                  </p>
+                </div>
+                <div class="data">
+                  <h4><%= __('profilePhone') %></h4>
+                  <p>
+                    <a
+                      class="details-text link text-hover"
+                      href="tel:+<%= employee.phone %>"
+                      ><%= employee.phone %></a
+                    >
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="projects">
+              <h3><%= __('profileProjects') %></h3>
+              <div class="projects_data">
+                <div class="data">
+                  <h4><%= __('recent') %></h4>
+                  <div class="edit-project">
+                    <p name="recent"><%= employee.recent_project %></p>
+                    <% if (req.cookies.role && req.cookies.role == "admin") { %>
+                    <span
+                      id="editRecent"
+                      class="edit-icon"
+                      onclick="editField('recent')"
+                    >
+                      <i class="fas fa-pencil-alt"></i> </span
+                    ><% } %>
+                  </div>
+                </div>
+                <div class="data">
+                  <h4><%= __('previous') %></h4>
+                  <div class="edit-project">
+                    <p name="previous"><%= employee.previous_project %></p>
+                    <% if (req.cookies.role && req.cookies.role == "admin") { %>
+                    <span
+                      id="editPrevious"
+                      class="edit-icon"
+                      onclick="editField('previous')"
+                    >
+                      <i class="fas fa-pencil-alt"></i> </span
+                    ><% } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="projects">
+              <h3><%= __('technologies') %></h3>
+              <div class="projects_data">
+                <div class="chart-content">
+                  <canvas
+                    id="myChart"
+                    style="
+                      width: 400px;
+                      max-width: 900px;
+                      display: block;
+                      height: 200px;
+                    "
+                  ></canvas>
+                  <script>
+                    var xValues = [
+                      'NodeJS',
+                      'C#',
+                      'Angular',
+                      'Java',
+                      'C++',
+                      'BootStrap',
+                      'Figma',
+                    ];
+
+                    const percentages = JSON.parse(
+                      '<%= technologyChart.percentages %>'
+                    );
+
+                    var barColors = [
+                      '#404bbf',
+                      '#555db9',
+                      '#8690f4',
+                      '#3d4387',
+                      '#8690f4',
+                      '#555db9',
+                      '#404bbf',
+                    ];
+                    const chart = new Chart('myChart', {
+                      type: 'doughnut',
+                      data: {
+                        labels: xValues,
+                        datasets: [
+                          {
+                            data: percentages,
+                            backgroundColor: barColors,
+                          },
+                        ],
+                      },
+                      options: {
+                        legend: {
+                          display: true,
+                          position: 'right',
+                        },
+                      },
+                    });
+                  </script>
+                </div>
+              </div>
+            </div>
+
+            <% if (req.cookies.role == "admin" || !req.params.name) { %>
+            <div class="projects">
+              <h3><%= __('personalDevelopmentPlan') %></h3>
+              <div class="projects_data">
+                <button id="openPlanModal" class="profile-btn">
+                  <%= __('openPersonalDevelopmentPlan') %>
+                </button>
+              </div>
+            </div>
+            <% } %>
+
+            <div class="projects">
+              <h3><%= __('socialMedia') %></h3>
+              <div class="projects_data social_media">
+                <ul class="socials-links-list sections-list list">
+                  <li class="socials-links-item">
+                    <a
+                      href="https://gmail.com"
+                      rel="noopener noreferrer"
+                      class="socials-links profile-links-size"
+                    >
+                      <svg class="socials-icon" width="16" height="16">
+                        <use href="./icons.svg#icon-mail"></use>
+                      </svg>
+                    </a>
+                  </li>
+                  <li class="socials-links-item">
+                    <a
+                      href="https://facebook.com"
+                      rel="noopener noreferrer"
+                      class="socials-links profile-links-size"
+                    >
+                      <svg class="socials-icon" width="16" height="16">
+                        <use href="./icons.svg#icon-facebook"></use>
+                      </svg>
+                    </a>
+                  </li>
+                  <li class="socials-links-item">
+                    <a
+                      href="https://linkedin.com"
+                      rel="noopener noreferrer"
+                      class="socials-links profile-links-size"
+                    >
+                      <svg class="socials-icon" width="16" height="16">
+                        <use href="./icons.svg#icon-linkedin"></use>
+                      </svg>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="pdpModal" class="modal">
+          <div class="modal-content pdp-modal">
+            <span class="close">&times;</span>
+            <div class="modal-data">
+              <h2 class="menu-header-title modal-title">
+                <%= __('personalDevelopmentPlan') %>
+              </h2>
+              <div class="board">
+                <div class="column column1" id="todo">
+                  <h3><%= __('todo') %></h3>
+                  <% if (req.cookies.role &&req.cookies.role == "admin") { %>
+                  <button id="openAddTodoModal" class="add-task-btn">+</button>
+                  <% } %>
+                </div>
+                <div class="column" id="oncheck">
+                  <h3><%= __('oncheck') %></h3>
+                </div>
+                <div class="column" id="done">
+                  <h3><%= __('done') %></h3>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="addTodoModal" class="modal">
+          <div class="modal-content todo-modal">
+            <span class="close-todo">&times;</span>
+            <form
+              action="/add-todo?employee_id=<%= employee.id %>"
+              method="post"
+            >
+              <div class="modal-data">
+                <label for="todoName">Task:</label>
+                <input
+                  type="text"
+                  id="todoName"
+                  name="todo_name"
+                  class="todo-input"
+                  required
+                />
+                <button type="submit" id="sendTodoBtn" class="settings-btn">
+                  Add
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Sortable/1.14.0/Sortable.min.js"></script>
+    <script>
+      function updateTaskColumn(taskId, columnId) {
+        const employeeId = '<%= employee.id %>';
+        fetch(`/tasks/${taskId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ column_id: columnId, id: employeeId }),
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Failed to update task column');
+            }
+            console.log('Task column updated successfully');
+          })
+          .catch(error => {
+            console.error('Error updating task column:', error);
+          });
+      }
+
+      function fetchInitialTasks() {
+        fetch('/tasks?employee_id=<%= employee.id %>')
+          .then(response => response.json())
+          .then(tasks => {
+            tasks.forEach(task => {
+              const columnId = task.column_id;
+              const taskId = task.task_id;
+              const taskName = task.task_name;
+              const column = document.getElementById(columnId);
+              const taskElement = document.createElement('div');
+              taskElement.textContent = taskName;
+              taskElement.classList.add('task');
+              taskElement.dataset.id = taskId;
+              if (userRole == 'admin') {
+                addSortableHandlerForAdmin(column, taskElement);
+              } else {
+                addSortableHandlerForUser(column, taskElement);
+              }
+              column.appendChild(taskElement);
+            });
+          })
+          .catch(error =>
+            console.error('Error fetching initial tasks:', error)
+          );
+      }
+
+      const board = document.querySelector('.board');
+      const columns = Array.from(board.querySelectorAll('.column'));
+      function addSortableHandlerForAdmin(column, taskElement) {
+        new Sortable(column, {
+          group: 'board',
+          animation: 150,
+          ghostClass: 'sortable-ghost',
+          onEnd: function (evt) {
+            const task = evt.item;
+            const newColumnId = task.parentElement.id;
+            const taskId = task.dataset.id;
+
+            updateTaskColumn(taskId, newColumnId);
+          },
+        });
+      }
+
+      function addSortableHandlerForUser(column, taskElement) {
+        if (column.id !== 'done') {
+          new Sortable(column, {
+            group: 'board',
+            animation: 150,
+            ghostClass: 'sortable-ghost',
+            onEnd: function (evt) {
+              const task = evt.item;
+              const newColumnId = task.parentElement.id;
+              const taskId = task.dataset.id;
+
+              updateTaskColumn(taskId, newColumnId);
+            },
+          });
+        }
+      }
+      function getCookie(name) {
+        const cookieString = document.cookie;
+        const cookies = cookieString.split('; ');
+        for (let i = 0; i < cookies.length; i++) {
+          const cookie = cookies[i].split('=');
+          if (cookie[0] === name) {
+            return cookie[1];
+          }
+        }
+        return null;
+      }
+
+      const userRole = getCookie('role');
+      console.log(userRole);
+      fetchInitialTasks();
+    </script>
+    <script>
+      function editField(fieldName) {
+        const fieldElement = document.querySelector(`[name="${fieldName}"]`);
+        const fieldValue = fieldElement.textContent.trim();
+        const right = document.querySelector('.right');
+
+        const mailtoLink = fieldElement.hasAttribute('href');
+        if (mailtoLink) {
+          fieldElement.removeAttribute('href');
+        }
+
+        const inputElement = document.createElement('input');
+        inputElement.setAttribute('type', 'text');
+        inputElement.setAttribute('name', fieldName);
+        inputElement.setAttribute('value', fieldValue);
+
+        fieldElement.innerHTML = '';
+        fieldElement.appendChild(inputElement);
+
+        const editIcon = document.getElementById(
+          `edit${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}`
+        );
+        editIcon.style.display = 'none';
+
+        inputElement.addEventListener('blur', function () {
+          console.log(fieldName);
+          saveField(fieldName, inputElement);
+        });
+      }
+
+      function saveField(fieldName, inputElement) {
+        const fieldValue = inputElement.value;
+        const fieldParent = inputElement.parentNode;
+        const wasLink = fieldParent.parentNode.querySelector('a');
+        let updateEndpoint;
+        switch (fieldName) {
+          case 'email':
+            updateEndpoint = '/profile/update-email/';
+            break;
+          case 'recent':
+            updateEndpoint = '/profile/update-recent_project/';
+            break;
+          case 'previous':
+            updateEndpoint = '/profile/update-previous_project/';
+            break;
+          default:
+            console.error('Field not recognized:', fieldName);
+            return;
+        }
+        if (wasLink) {
+          const newLinkElement = document.createElement('a');
+          newLinkElement.textContent = fieldValue;
+          newLinkElement.setAttribute('class', 'details-text link text-hover');
+          newLinkElement.setAttribute('href', 'mailto:' + fieldValue);
+
+          fieldParent.replaceChild(newLinkElement, inputElement);
+        } else {
+          const newParagraphElement = document.createElement('p');
+          newParagraphElement.textContent = fieldValue;
+
+          fieldParent.replaceChild(newParagraphElement, inputElement);
+        }
+
+        const editIcon = document.getElementById(
+          `edit${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)}`
+        );
+        editIcon.style.display = 'inline-block';
+        const employeeId = '<%= employee.id %>';
+        fetch(updateEndpoint, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            [fieldName]: fieldValue,
+            id: employeeId,
+          }),
+        })
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not ok');
+            }
+            return response.json();
+          })
+          .catch(error => {
+            console.error('Error updating profile:', error);
+          });
+      }
+    </script>
+
+    <script src="https://kit.fontawesome.com/b99e675b6e.js"></script>
+  </body>
+</html>
